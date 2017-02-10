@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: install the basics
+    dnf:
+      name: keepass
+  - name: keepasshttp
+    get_url: 
+      url: https://raw.github.com/pfn/keepasshttp/master/KeePassHttp.plgx
+      dest: /usr/lib/keepass

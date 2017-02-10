@@ -1,0 +1,30 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: download
+    get_url: 
+      url: https://download.sublimetext.com/sublime_text_3_build_3126_x64.tar.bz2
+      dest: /tmp
+  - name: extract
+    unarchive: 
+      src: /tmp/sublime_text_3_build_3126_x64.tar.bz2
+      dest: /tmp
+  - name: move
+    command: mv /tmp/sublime_text_3 /opt/sublime_text
+    args:
+      creates: /opt/sublime_text
+      removes: /tmp/sublime_text_3
+  - name: shortcut
+    file:
+      src: /opt/sublime_text/sublime_text.desktop
+      dest: /usr/share/applications/sublime_text.desktop
+      state: link
+      force: yes
+  - name: icon
+    command: sed -i.bak 's/Icon=sublime-text/Icon=\/opt\/sublime_text\/Icon\/128x128\/sublime-text.png/g' /usr/share/applications/sublime_text.desktop 
+  - name: bin
+    file:
+      src: /opt/sublime_text/sublime_text
+      dest: /usr/bin/sublime_text
+      state: link
